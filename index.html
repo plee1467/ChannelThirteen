@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Project 1</title>
+</head>
+<body>
+	Search: <input type="text" id="search-input">
+	<br><br>
+	From Date:<input type="text" id="fromDate">
+	<br><br>
+	To Date:<input type="text" id="toDate">
+	<button type="submit" id="submit">Submit</button>
+	<div id="data-goes-here"></div>
+	<div id="data2-goes-here"></div>
+	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script type="text/javascript">
+
+  	$("#submit").on("click", function(event){
+
+  	var search = $("#search-input").val();
+  	var fromDate = $("#fromDate").val();
+  	var toDate = $("#toDate").val();
+  	var queryURL;
+  	var query2URL;    
+
+  		if(search !== null){
+	  		if((fromDate === null || fromDate === "") && (toDate === null || toDate === "")){
+				queryURL = "https://content.guardianapis.com/search?q=" + search + "&api-key=4c3b66fa-bd94-4809-9a76-6837f3a9dace";
+				query2URL = "https://api.nytimes.com/svc/search/v2/articlesearch.json?q=" + search + "&api-key=b9f91d369ff59547cd47b931d8cbc56b:0:74623931"
+				console.log("1");
+				console.log(fromDate);
+				console.log(toDate);
+			} 
+			else if((toDate === null || toDate === "") && (fromDate !== null || fromDate !== "")){
+				queryURL = "https://content.guardianapis.com/search?q=" + search + "&from-date=" + fromDate + "&api-key=4c3b66fa-bd94-4809-9a76-6837f3a9dace";
+				query2URL = "https://api.nytimes.com/svc/search/v2/articlesearch.json?q=" + search + "&begin_date=" + fromDate + "&api-key=b9f91d369ff59547cd47b931d8cbc56b:0:74623931";
+				console.log("2");
+				console.log(fromDate);
+				console.log(toDate);
+			} 
+			else if((fromDate === null || fromDate === "") && (toDate !== null || toDate !== "")){
+	 			queryURL = "https://content.guardianapis.com/search?q=" + search + "&to-date=" + toDate + "&api-key=4c3b66fa-bd94-4809-9a76-6837f3a9dace";
+	 			query2URL = "https://api.nytimes.com/svc/search/v2/articlesearch.json?q=" + search + "&end_date=" + toDate + "&api-key=b9f91d369ff59547cd47b931d8cbc56b:0:74623931";
+	 			console.log("3");			
+	 			console.log(fromDate);
+				console.log(toDate);
+			} 
+			else{
+				queryURL = "https://content.guardianapis.com/search?q=" + search + "&from-date=" + fromDate + "&to-date=" + toDate + "&api-key=4c3b66fa-bd94-4809-9a76-6837f3a9dace";
+				query2URL  = "https://api.nytimes.com/svc/search/v2/articlesearch.json?q=" + search + "&begin_date=" + fromDate + "&end_date=" + toDate + "&api-key=b9f91d369ff59547cd47b931d8cbc56b:0:74623931"
+				console.log("4");
+				console.log(fromDate);
+				console.log(toDate);
+			}
+		}else {
+			$("#data-goes-here").html("Search field is empty!");
+		}
+
+
+		    $.ajax({
+		      url: queryURL,
+		      method: "GET"
+		    }).done(function(anything) {
+
+		    	console.log(anything.response.results);
+		    	console.log(anything.response.results[0].webTitle);
+		    	console.log(anything.response.results[0].webPublicationDate);
+
+		    	$("#data-goes-here").append(`${anything.response.results[0].webTitle}<br>
+		    								 ${anything.response.results[0].webPublicationDate}<br>
+		    								 ${anything.response.results[0].webUrl}<br><br>`);
+
+		    });	
+
+                $.ajax({
+              url: query2URL,
+              method: "GET"
+            }).done(function(status) {
+                    console.log(status);
+                    console.log("first Response 2: " + status.response.docs[0].snippet);
+                    
+                
+            $("#data2-goes-here").append(`${status.response.docs[0].snippet}<br>
+		    								 ${status.response.docs[0].pub_date}<br>
+		    								 ${status.response.docs[0].web_url}<br><br>`);
+            });
+	}); //closing on click
+  </script>
+</body>
+</html>

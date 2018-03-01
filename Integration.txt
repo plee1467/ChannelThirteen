@@ -1,0 +1,10 @@
+Text inputs:
+
+search:   "search-input"  : user types in search
+from date: "fromDate"  : user tpyes in from date
+To date:  "toDate"   : user types in to Date
+
+Data Push to Divs:
+
+guardian data: "data-goes-here"  
+NYT   : "data2-goes-here"
